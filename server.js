@@ -56,29 +56,14 @@ async function verificarConta(req, res, next) {
   catch(error)
     {res.status(401).send('Acesso Negado: Token inválido');}}
 
-app.post('/api/databaseaddemail', verificarConta, async (req, res) => {
-  try{
-    const [linhas] = await pool.execute('SELECT email, is_admin FROM usuarios WHERE email = ?', [req.usuarioEmail]);
-    
-    if (!linhas[0].is_admin){
-      return res.status(403).json({erro: 'Acesso negado, apenas administradores podem adicionar novos emails.'});
-    }
-
-    const {novoEmail} = req.body;
-    if (!novoEmail)
-      {return res.status(400).json({erro: 'Nenhum email foi fornecido'});}
-
-    const [resultado] = await pool.execute('INSERT IGNORE INTO usuarios (email) VALUES (?)', [novoEmail]);
-    if (resultado.affectedRows === 0)
-      {return res.status(409).json({mensagem: 'Email já está no sistema.'});}
-    
-    return res.status(201).json({mensagem: 'Email autorizado com sucesso!'});
-  }
-  catch (error){
-    console.error('Erro ao adicionar email:', error);
-    return res.status(500).json({erro: 'Erro interno do servidor.'});
-  }
-})
+//app.post('/api/adicionarfavorito', verificarConta, async (req, res) => {
+//  try{
+//    const []
+//  }
+//  catch{
+//
+// }
+//})
 
 app.get('/api/buscaremail', verificarConta, async (req, res) => {
   try{
